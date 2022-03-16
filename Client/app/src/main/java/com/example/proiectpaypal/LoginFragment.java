@@ -1,12 +1,20 @@
 package com.example.proiectpaypal;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.proiectpaypal.databinding.FragmentLoginBinding;
+import com.google.android.material.internal.TextWatcherAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +27,8 @@ public class LoginFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    FragmentLoginBinding binding;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,6 +69,68 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+
+        binding = FragmentLoginBinding.inflate(getLayoutInflater());
+
+
+        return binding.getRoot();
+        //return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.usernameTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if (charSequence.length() == 0) {
+                    binding.usernameInput.setHelperText("Required*");
+                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                }
+                if (charSequence.length() < 8 && charSequence.length() > 0) {
+                    binding.usernameInput.setHelperText("Username must be at least 8 characters");
+                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                }
+                if (charSequence.length() > 8) {
+                    binding.usernameInput.setHelperText("");
+                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        binding.passwordTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0) {
+                    binding.passwordInput.setHelperText("Required*");
+                    binding.passwordInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                }
+                if (charSequence.length() > 0) {
+                    binding.passwordInput.setHelperText("");
+                    binding.passwordInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 }
