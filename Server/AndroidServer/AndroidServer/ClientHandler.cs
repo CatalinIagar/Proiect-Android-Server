@@ -54,7 +54,7 @@ namespace AndroidServer
         {
             while (shouldRun)
             {
-                byte[] rawMsg = new byte[10];
+                byte[] rawMsg = new byte[1000];
 
                 try
                 {
@@ -75,15 +75,15 @@ namespace AndroidServer
         private void handleMsg(String msg)
         {
             Console.WriteLine(msg);
-            char[] sep = { '-' };
+            char[] sep = {' '};
             String[] arrMsg = msg.Split(sep);
+            foreach (String str in arrMsg) Console.WriteLine(str + " test");
             if (arrMsg[0].StartsWith(Mesaje.sLoginReq))
             {
-                Console.WriteLine(arrMsg[1]);
+                //Console.WriteLine(arrMsg[1]);
                 if (arrMsg[1].StartsWith("Radu"))
                 {
                     sendResponseLogin(Mesaje.sLoginOK);
-                    Console.WriteLine(arrMsg[0] + " " + arrMsg[1] + " " + arrMsg[2]);
                 }
             }
             else if (arrMsg[0].StartsWith("logout"))

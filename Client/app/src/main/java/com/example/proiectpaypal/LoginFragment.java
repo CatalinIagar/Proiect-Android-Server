@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.example.proiectpaypal.databinding.FragmentLoginBinding;
 import com.google.android.material.internal.TextWatcherAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +34,12 @@ public class LoginFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    boolean isUsernameGood = false;
+    boolean isPasswordGood = false;
+
+    String currentUsername;
+    String currnetPassword;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -90,14 +97,18 @@ public class LoginFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 if (charSequence.length() == 0) {
+                    isUsernameGood = false;
                     binding.usernameInput.setHelperText("Required*");
                     binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 }
                 if (charSequence.length() < 8 && charSequence.length() > 0) {
+                    isUsernameGood = false;
                     binding.usernameInput.setHelperText("Username must be at least 8 characters");
                     binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 }
                 if (charSequence.length() > 8) {
+                    isUsernameGood = true;
+                    currentUsername = charSequence.toString();
                     binding.usernameInput.setHelperText("");
                     binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -118,10 +129,13 @@ public class LoginFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.length() == 0) {
+                    isPasswordGood = false;
                     binding.passwordInput.setHelperText("Required*");
                     binding.passwordInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 }
                 if (charSequence.length() > 0) {
+                    isPasswordGood = true;
+                    currnetPassword = charSequence.toString();
                     binding.passwordInput.setHelperText("");
                     binding.passwordInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -130,6 +144,20 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        binding.loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isUsernameGood == false){
+                    Snackbar.make(view, "Username incorrect", Snackbar.LENGTH_SHORT).show();
+                }else if(isPasswordGood == false){
+                    Snackbar.make(view, "Password incorrect", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    String loginRequest = "login " + currentUsername + " " + currnetPassword;
+                    //Do stuff with server and wait for server response
+                }
             }
         });
     }
