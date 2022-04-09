@@ -14,8 +14,11 @@ namespace AndroidServer
 
             if (arrMsg[0].Equals(Mesaje.sSignupReq))
             {
-                Console.WriteLine(proccesSignupReq(arrMsg)); 
                 return proccesSignupReq(arrMsg);
+            }
+            else if (arrMsg[0].Equals(Mesaje.sLoginReq))
+            {
+                return proccesLoginReq(arrMsg);
             }
             else
             {
@@ -24,10 +27,34 @@ namespace AndroidServer
             
         }
 
+        private static string proccesLoginReq(string[] arrMsg)
+        {
+            try
+            {
+                using (UsersDbContext context = new UsersDbContext())
+                {
+                    String tempUsername = arrMsg[1];
+                    int tempPassword = arrMsg[2].GetHashCode();   
+
+                    int count = (from u in context.UsersList
+                                 where u.Username == tempUsername && u.Password == tempPassword
+                                 select u).Count();
+
+                    if (count > 0) return Mesaje.cLoginOk;
+                    Console.WriteLine(arrMsg[1] + " " + arrMsg[2]);
+                    return Mesaje.cLoginErr;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Mesaje.cLoginErr;
+            }
+            
+        }
+
         private static string proccesSignupReq(string[] arrMsg)
         {
-            foreach(String s in arrMsg) Console.WriteLine(s);
-
             if (checkUsername(arrMsg[1])) return Mesaje.cSignupUserErr;
             if (checkEmail(arrMsg[3])) return Mesaje.cSignupEmailErr;
 

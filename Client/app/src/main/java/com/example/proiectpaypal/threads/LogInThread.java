@@ -1,31 +1,34 @@
-package com.example.proiectpaypal;
+package com.example.proiectpaypal.threads;
 
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
-import java.io.BufferedInputStream;
+import com.example.proiectpaypal.randomthings.Action;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-public class MyThread extends Thread{
-    String ip;
-    int port;
-    String requestString;
+public class LogInThread extends Thread{
+    private String ip;
+    private int port;
+    private String requestString;
 
-    public MyThread (String message){
-        /*try{
-            this.ip = InetAddress.getLocalHost();
-        }catch (UnknownHostException e){
-            e.printStackTrace();
-        }*/
+    private Handler handler;
+    private View view;
+    private Action callback;
+
+    public LogInThread (String message, View view, Handler handler, Action callback){
         this.ip = "192.168.56.1";
-        //this.ip = "localhost";
         this.port = 8000;
         this.requestString = message;
+        this.handler = handler;
+        this.view = view;
+        this.callback = callback;
     }
 
     public void run(){
@@ -38,7 +41,7 @@ public class MyThread extends Thread{
 
             writer.println(requestString);
 
-            Thread.sleep(1000);
+            Thread.sleep(2500);
 
             char[] rawMessage = new char[100];
             reader.read(rawMessage);
@@ -46,6 +49,16 @@ public class MyThread extends Thread{
             String message = String.valueOf(rawMessage);
 
             String[] arrayMessage = message.split(" ");
+
+            Log.i("Signup", arrayMessage[0]);
+
+            if(arrayMessage[0].equals("login-ok")){
+                callback.exec();
+            }else if(arrayMessage[0].equals("login-err")){
+                handler.post(() -> {
+                    Snackbar.make(view, "Username or password incorrect", Snackbar.LENGTH_SHORT).show();
+                });
+            }
 
         }catch (IOException | InterruptedException e){
             e.printStackTrace();

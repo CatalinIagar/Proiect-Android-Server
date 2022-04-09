@@ -1,4 +1,4 @@
-package com.example.proiectpaypal;
+package com.example.proiectpaypal.fragments;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -7,15 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.PatternMatcher;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proiectpaypal.databinding.FragmentLoginBinding;
+import com.example.proiectpaypal.R;
 import com.example.proiectpaypal.databinding.FragmentSignup2Binding;
+import com.example.proiectpaypal.threads.SignUpThread;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.regex.Matcher;
@@ -114,7 +115,7 @@ public class SignupFragment extends Fragment {
                     isUsernameGood = false;
                     binding.usernameInput.setHelperText("Username must be at least 8 characters");
                     binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                }else if (charSequence.length() > 8) {
+                }else if (charSequence.length() >= 8) {
                     isUsernameGood = true;
                     currentUsername = charSequence.toString();
                     binding.usernameInput.setHelperText("");
@@ -308,8 +309,28 @@ public class SignupFragment extends Fragment {
                 }else{
                     String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currentPhoneNumber + " ";
                     //Do something with server request and wait for response
+
                 }
             }
+        });
+
+        binding.singupButton.setOnClickListener(view1 -> {
+            if(isUsernameGood == false){
+                Snackbar.make(view, "Username incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isPasswordGood == false){
+                Snackbar.make(view, "Password incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isEmailGood == false){
+                Snackbar.make(view, "Email incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isCNPGood == false){
+                Snackbar.make(view, "CNP incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isPhoneNumberGood == false){
+                Snackbar.make(view, "Phone number incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isUsernameGood && isConfirmPasswordGood && isPasswordGood && isEmailGood && isCNPGood && isPhoneNumberGood){
+                String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currentPhoneNumber + " ";
+                Handler handler = new Handler();
+                    new SignUpThread(requestSignup, view, handler).start();
+
+                }
         });
     }
 

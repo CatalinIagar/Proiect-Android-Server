@@ -1,12 +1,13 @@
-package com.example.proiectpaypal;
+package com.example.proiectpaypal.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.example.proiectpaypal.R;
+import com.example.proiectpaypal.randomthings.ViewPagerFragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

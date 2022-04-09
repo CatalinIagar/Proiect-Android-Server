@@ -85,7 +85,7 @@ namespace AndroidServer
         private void sendResponseLogin(String msg)
         {
             String raspuns = "";
-            raspuns = raspuns.Insert(0, msg);
+            raspuns = raspuns.Insert(0, msg + " ");
             Console.WriteLine(raspuns);
             byte[] bytesMsgRaspuns = Encoding.ASCII.GetBytes(raspuns);
             socket.Send(bytesMsgRaspuns);

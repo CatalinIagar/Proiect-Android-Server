@@ -1,6 +1,6 @@
-package com.example.proiectpaypal;
+package com.example.proiectpaypal.fragments;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -14,10 +14,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.example.proiectpaypal.activities.LoginActivity;
+import com.example.proiectpaypal.R;
 import com.example.proiectpaypal.databinding.FragmentLoginBinding;
-import com.google.android.material.internal.TextWatcherAdapter;
+import com.example.proiectpaypal.threads.LogInThread;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -109,7 +110,7 @@ public class LoginFragment extends Fragment {
                     binding.usernameInput.setHelperText("Username must be at least 8 characters");
                     binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 }
-                if (charSequence.length() > 8) {
+                if (charSequence.length() >= 8) {
                     isUsernameGood = true;
                     currentUsername = charSequence.toString();
                     binding.usernameInput.setHelperText("");
@@ -169,9 +170,13 @@ public class LoginFragment extends Fragment {
             }else if(isPasswordGood == false){
                 Snackbar.make(view1, "Password incorrect", Snackbar.LENGTH_SHORT).show();
             }else if (isUsernameGood && isPasswordGood){
-                String loginRequest = "login " + currentUsername + " " + currnetPassword;
-                Snackbar.make(view1, "Test", Snackbar.LENGTH_SHORT).show();
-                new MyThread(loginRequest).start();
+                String loginRequest = "login " + currentUsername + " " + currnetPassword + " ";
+                Handler handler = new Handler();
+
+                new LogInThread(loginRequest, view, handler, () -> {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }).start();
             }
         });
     }
