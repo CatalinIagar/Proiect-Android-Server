@@ -77,39 +77,16 @@ namespace AndroidServer
             Console.WriteLine(msg);
             char[] sep = {' '};
             String[] arrMsg = msg.Split(sep);
-            foreach (String str in arrMsg) Console.WriteLine(str + " test");
-            if (arrMsg[0].StartsWith(Mesaje.sLoginReq))
-            {
-                //Console.WriteLine(arrMsg[1]);
-                if (arrMsg[1].StartsWith("Radu"))
-                {
-                    sendResponseLogin(Mesaje.sLoginOK);
-                }
-            }
-            else if (arrMsg[0].StartsWith("logout"))
-            {
-                //avem cerere tip logout
 
-            }
-            else if (arrMsg[0].StartsWith("sendMsg"))
-            {
-                //avem cerere de transmitere mesag catre destinatar
-            }
-            else
-            {
-                //avem cerere eronata
-                // sendResponse("eroare-123");
-            }
+            String raspuns = DbHandler.messageProcessing(arrMsg);
+            sendResponseLogin(raspuns);
         }
 
         private void sendResponseLogin(String msg)
         {
-            //procesare si trimitere raspuns in cazul mesajului Login
-            //verificam daca exista user-ul...
             String raspuns = "";
-            //if user exists?
-            raspuns = raspuns.Insert(0, "login");
-            raspuns = raspuns.Insert(4, "ok");
+            raspuns = raspuns.Insert(0, msg);
+            Console.WriteLine(raspuns);
             byte[] bytesMsgRaspuns = Encoding.ASCII.GetBytes(raspuns);
             socket.Send(bytesMsgRaspuns);
         }

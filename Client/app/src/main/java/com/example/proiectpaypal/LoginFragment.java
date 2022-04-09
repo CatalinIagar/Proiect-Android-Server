@@ -1,5 +1,6 @@
 package com.example.proiectpaypal;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -7,11 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.proiectpaypal.databinding.FragmentLoginBinding;
 import com.google.android.material.internal.TextWatcherAdapter;
@@ -156,8 +159,19 @@ public class LoginFragment extends Fragment {
                     Snackbar.make(view, "Password incorrect", Snackbar.LENGTH_SHORT).show();
                 }else{
                     String loginRequest = "login " + currentUsername + " " + currnetPassword;
-                    //Do stuff with server and wait for server response
                 }
+            }
+        });
+
+       binding.loginButton.setOnClickListener(view1 -> {
+            if(isUsernameGood == false){
+                Snackbar.make(view1, "Username incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if(isPasswordGood == false){
+                Snackbar.make(view1, "Password incorrect", Snackbar.LENGTH_SHORT).show();
+            }else if (isUsernameGood && isPasswordGood){
+                String loginRequest = "login " + currentUsername + " " + currnetPassword;
+                Snackbar.make(view1, "Test", Snackbar.LENGTH_SHORT).show();
+                new MyThread(loginRequest).start();
             }
         });
     }

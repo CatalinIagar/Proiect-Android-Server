@@ -48,7 +48,7 @@ public class SignupFragment extends Fragment {
     String currentPassword;
     String currentEmail;
     String currentCNP;
-    String currnetPhoneNumber;
+    String currentPhoneNumber;
 
     FragmentSignup2Binding binding;
 
@@ -246,11 +246,11 @@ public class SignupFragment extends Fragment {
                     binding.PhoneNumberInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 } else if(!isNumberValid(charSequence.toString())){
                     isPhoneNumberGood = false;
-                    binding.PhoneNumberInput.setHelperText("Numebr is not valid");
+                    binding.PhoneNumberInput.setHelperText("Number is not valid");
                     binding.PhoneNumberInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 }else{
                     isPhoneNumberGood = true;
-                    currnetPhoneNumber = charSequence.toString();
+                    currentPhoneNumber = charSequence.toString();
                     binding.PhoneNumberInput.setHelperText("");
                     binding.PhoneNumberInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -306,10 +306,9 @@ public class SignupFragment extends Fragment {
                 }else if(isPhoneNumberGood == false){
                     Snackbar.make(view, "Phone number incorrect", Snackbar.LENGTH_SHORT).show();
                 }else{
-                    String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currnetPhoneNumber;
+                    String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currentPhoneNumber + " ";
                     //Do something with server request and wait for response
                 }
-
             }
         });
     }
@@ -328,7 +327,7 @@ public class SignupFragment extends Fragment {
 
         if(res == 10) res = 1;
 
-        if (res != Integer.parseInt(String.valueOf(CNP.charAt((12))))) return  false;
+        if (res != Integer.parseInt(String.valueOf(CNP.charAt((12))))) return false;
 
         return true;
     }
