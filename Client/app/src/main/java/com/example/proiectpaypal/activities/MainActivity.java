@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.proiectpaypal.R;
 import com.example.proiectpaypal.randomthings.ViewPagerFragmentAdapter;

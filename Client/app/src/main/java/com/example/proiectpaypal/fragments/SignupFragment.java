@@ -293,27 +293,6 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        binding.singupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isUsernameGood == false){
-                    Snackbar.make(view, "Username incorrect", Snackbar.LENGTH_SHORT).show();
-                }else if(isPasswordGood == false){
-                    Snackbar.make(view, "Password incorrect", Snackbar.LENGTH_SHORT).show();
-                }else if(isEmailGood == false){
-                    Snackbar.make(view, "Email incorrect", Snackbar.LENGTH_SHORT).show();
-                }else if(isCNPGood == false){
-                    Snackbar.make(view, "CNP incorrect", Snackbar.LENGTH_SHORT).show();
-                }else if(isPhoneNumberGood == false){
-                    Snackbar.make(view, "Phone number incorrect", Snackbar.LENGTH_SHORT).show();
-                }else{
-                    String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currentPhoneNumber + " ";
-                    //Do something with server request and wait for response
-
-                }
-            }
-        });
-
         binding.singupButton.setOnClickListener(view1 -> {
             if(isUsernameGood == false){
                 Snackbar.make(view, "Username incorrect", Snackbar.LENGTH_SHORT).show();
@@ -329,7 +308,6 @@ public class SignupFragment extends Fragment {
                 String requestSignup = "signup " + currentUsername + " " + currentPassword + " " + currentEmail + " " + currentCNP + " " + currentPhoneNumber + " ";
                 Handler handler = new Handler();
                     new SignUpThread(requestSignup, view, handler).start();
-
                 }
         });
     }
@@ -394,7 +372,7 @@ public class SignupFragment extends Fragment {
     }
 
     boolean hasSpecialChar(String str){
-        Pattern p = Pattern.compile("[.!#$%&'*+/=?^_`{|}~-]");
+        Pattern p = Pattern.compile("[.@!#$%&'*+/=?^_`{|}~-]");
         Matcher m = p.matcher(str);
         boolean b = m.find();
 

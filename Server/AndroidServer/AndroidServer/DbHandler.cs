@@ -34,13 +34,19 @@ namespace AndroidServer
                 using (UsersDbContext context = new UsersDbContext())
                 {
                     String tempUsername = arrMsg[1];
-                    int tempPassword = arrMsg[2].GetHashCode();   
+                    int tempPassword = arrMsg[2].GetStableHashCode();   
 
                     int count = (from u in context.UsersList
                                  where u.Username == tempUsername && u.Password == tempPassword
                                  select u).Count();
 
-                    if (count > 0) return Mesaje.cLoginOk;
+                    if (count > 0)
+                    {
+                        Users user = (from u in context.UsersList
+                                      where u.Username == tempUsername
+                                      select u).First();
+                        return Mesaje.cLoginOk + " " + user.Username + " " + user.Email + " " + user.CNP + " " + user.PhoneNumber + " " + user.Balance;
+                    }
                     Console.WriteLine(arrMsg[1] + " " + arrMsg[2]);
                     return Mesaje.cLoginErr;
                 }
@@ -64,7 +70,7 @@ namespace AndroidServer
                 {
                     Users user = new Users();
                     user.Username = arrMsg[1];
-                    user.Password = arrMsg[2].GetHashCode();
+                    user.Password = arrMsg[2].GetStableHashCode();
                     user.Email = arrMsg[3];
                     user.CNP = arrMsg[4];
                     user.PhoneNumber = arrMsg[5];

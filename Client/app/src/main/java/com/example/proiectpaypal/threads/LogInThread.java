@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.proiectpaypal.randomthings.Action;
+import com.example.proiectpaypal.randomthings.CurrentUser;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -41,9 +42,9 @@ public class LogInThread extends Thread{
 
             writer.println(requestString);
 
-            Thread.sleep(2500);
+            Thread.sleep(1000);
 
-            char[] rawMessage = new char[100];
+            char[] rawMessage = new char[1000];
             reader.read(rawMessage);
 
             String message = String.valueOf(rawMessage);
@@ -53,6 +54,11 @@ public class LogInThread extends Thread{
             Log.i("Signup", arrayMessage[0]);
 
             if(arrayMessage[0].equals("login-ok")){
+                CurrentUser.getInstance().setUsername(arrayMessage[1]);
+                CurrentUser.getInstance().setEmail(arrayMessage[2]);
+                CurrentUser.getInstance().setCNP(arrayMessage[3]);
+                CurrentUser.getInstance().setPhoneNumber(arrayMessage[4]);
+                CurrentUser.getInstance().setBalance(Integer.parseInt(arrayMessage[5]));
                 callback.exec();
             }else if(arrayMessage[0].equals("login-err")){
                 handler.post(() -> {

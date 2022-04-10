@@ -151,19 +151,6 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        binding.loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isUsernameGood == false){
-                    Snackbar.make(view, "Username incorrect", Snackbar.LENGTH_SHORT).show();
-                }else if(isPasswordGood == false){
-                    Snackbar.make(view, "Password incorrect", Snackbar.LENGTH_SHORT).show();
-                }else{
-                    String loginRequest = "login " + currentUsername + " " + currnetPassword;
-                }
-            }
-        });
-
        binding.loginButton.setOnClickListener(view1 -> {
             if(isUsernameGood == false){
                 Snackbar.make(view1, "Username incorrect", Snackbar.LENGTH_SHORT).show();
