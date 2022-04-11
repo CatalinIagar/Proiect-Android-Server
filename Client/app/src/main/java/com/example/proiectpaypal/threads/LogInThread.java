@@ -42,7 +42,7 @@ public class LogInThread extends Thread{
 
             writer.println(requestString);
 
-            Thread.sleep(1000);
+            Thread.sleep(500);
 
             char[] rawMessage = new char[1000];
             reader.read(rawMessage);

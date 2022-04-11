@@ -38,12 +38,12 @@ public class SignupFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    boolean isUsernameGood = false;
-    boolean isPasswordGood = false;
-    boolean isConfirmPasswordGood = false;
-    boolean isEmailGood = false;
-    boolean isCNPGood = false;
-    boolean isPhoneNumberGood = false;
+    private boolean isUsernameGood = false;
+    private boolean isPasswordGood = false;
+    private boolean isConfirmPasswordGood = false;
+    private boolean isEmailGood = false;
+    private boolean isCNPGood = false;
+    private boolean isPhoneNumberGood = false;
 
     String currentUsername;
     String currentPassword;

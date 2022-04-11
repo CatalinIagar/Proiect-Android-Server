@@ -23,6 +23,14 @@ public class CurrentUser {
         return instance;
     }
 
+    public void setNewUser(){
+        this.username = "";
+        this.email = "";
+        this.CNP = "";
+        this.phoneNumber = "";
+        this.balance = 0;
+    }
+
     public String getUsername() {
         return username;
     }

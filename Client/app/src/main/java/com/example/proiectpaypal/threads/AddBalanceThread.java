@@ -1,22 +1,19 @@
 package com.example.proiectpaypal.threads;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
+import com.example.proiectpaypal.randomthings.CurrentUser;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-public class SignUpThread extends Thread{
+public class AddBalanceThread extends Thread{
     private String ip;
     private int port;
     private String requestString;
@@ -24,7 +21,7 @@ public class SignUpThread extends Thread{
     private Handler handler;
     private View view;
 
-    public SignUpThread (String message, View view, Handler handler){
+    public AddBalanceThread (String message, View view, Handler handler){
         this.ip = "192.168.56.1";
         this.port = 8000;
         this.requestString = message;
@@ -32,7 +29,8 @@ public class SignUpThread extends Thread{
         this.view = view;
     }
 
-    public void run(){
+    @Override
+    public void run() {
         try{
             Log.i("Thread", "Procces started");
             Socket socket = new Socket(ip, port);
@@ -51,19 +49,14 @@ public class SignUpThread extends Thread{
 
             String[] arrayMessage = message.split(" ");
 
-            Log.i("Signup", arrayMessage[0]);
-
-            if(arrayMessage[0].equals("signup-ok")){
+            if(arrayMessage[0].equals("addBalance-ok")){
                 handler.post(() -> {
-                    Snackbar.make(view, "Account created", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Balance updated", Snackbar.LENGTH_SHORT).show();
+                    CurrentUser.getInstance().setBalance(Integer.parseInt(arrayMessage[1]));
                 });
-            }else if(arrayMessage[0].equals("signup-user-err")){
+            }else if(arrayMessage[0].equals("addBalance-err")){
                 handler.post(() -> {
-                    Snackbar.make(view, "User already exists", Snackbar.LENGTH_SHORT).show();
-                });
-            }else if(arrayMessage[0].equals("signup-email-err")){
-                handler.post(() -> {
-                    Snackbar.make(view, "Email already exists", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Invalid password", Snackbar.LENGTH_SHORT).show();
                 });
             }
 

@@ -15,38 +15,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proiectpaypal.activities.LoginActivity;
 import com.example.proiectpaypal.R;
-import com.example.proiectpaypal.databinding.FragmentLoginBinding;
-import com.example.proiectpaypal.threads.ForgotPassThread;
+import com.example.proiectpaypal.activities.LoginActivity;
+import com.example.proiectpaypal.databinding.FragmentAddBalanceBinding;
+import com.example.proiectpaypal.databinding.FragmentSignup2Binding;
+import com.example.proiectpaypal.randomthings.CurrentUser;
+import com.example.proiectpaypal.threads.AddBalanceThread;
 import com.example.proiectpaypal.threads.LogInThread;
+import com.example.proiectpaypal.threads.SignUpThread;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
+ * Use the {@link AddBalanceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class AddBalanceFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    FragmentLoginBinding binding;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    boolean isUsernameGood = false;
-    boolean isPasswordGood = false;
+    private boolean isBalanceGood = false;
+    private boolean isPasswordGood = false;
 
-    String currentUsername;
-    String currnetPassword;
+    private String currentValue;
+    private String currentPassword;
 
-    public LoginFragment() {
+    FragmentAddBalanceBinding binding;
+
+    public AddBalanceFragment() {
         // Required empty public constructor
     }
 
@@ -56,11 +59,11 @@ public class LoginFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginFragment.
+     * @return A new instance of fragment AddBalanceFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
+    public static AddBalanceFragment newInstance(String param1, String param2) {
+        AddBalanceFragment fragment = new AddBalanceFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -81,42 +84,39 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //return inflater.inflate(R.layout.fragment_add_balance, container, false);
 
-        binding = FragmentLoginBinding.inflate(getLayoutInflater());
-
+        binding = FragmentAddBalanceBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
-        //return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.usernameTextInput.addTextChangedListener(new TextWatcher() {
+        binding.balanceTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (charSequence.length() == 0) {
-                    isUsernameGood = false;
-                    binding.usernameInput.setHelperText("Required*");
-                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                int value = 0;
+                if(!charSequence.toString().equals(""))
+                    value = Integer.parseInt(charSequence.toString());
+                if(value <= 0){
+                    isPasswordGood = false;
+                    binding.balanceInput.setHelperText("Invalid Value");
+                    binding.balanceInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                }else if(value > 0){
+                    isBalanceGood = true;
+                    currentValue = charSequence.toString();
+                    binding.balanceInput.setHelperText("");
+                    binding.balanceInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
-                if (charSequence.length() < 8 && charSequence.length() > 0) {
-                    isUsernameGood = false;
-                    binding.usernameInput.setHelperText("Username must be at least 8 characters");
-                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-                }
-                if (charSequence.length() >= 8) {
-                    isUsernameGood = true;
-                    currentUsername = charSequence.toString();
-                    binding.usernameInput.setHelperText("");
-                    binding.usernameInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-                }
+
             }
 
             @Override
@@ -140,7 +140,7 @@ public class LoginFragment extends Fragment {
                 }
                 if (charSequence.length() > 0) {
                     isPasswordGood = true;
-                    currnetPassword = charSequence.toString();
+                    currentPassword = charSequence.toString();
                     binding.passwordInput.setHelperText("");
                     binding.passwordInput.setHelperTextColor(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 }
@@ -152,31 +152,16 @@ public class LoginFragment extends Fragment {
             }
         });
 
-       binding.loginButton.setOnClickListener(view1 -> {
-            if(isUsernameGood == false){
-                Snackbar.make(view1, "Username incorrect", Snackbar.LENGTH_SHORT).show();
+        binding.addBalanceButton.setOnClickListener(view1 -> {
+            if(isBalanceGood == false){
+                Snackbar.make(view1, "Invalid value", Snackbar.LENGTH_SHORT).show();
             }else if(isPasswordGood == false){
-                Snackbar.make(view1, "Password incorrect", Snackbar.LENGTH_SHORT).show();
-            }else if (isUsernameGood && isPasswordGood){
-                String loginRequest = "login " + currentUsername + " " + currnetPassword + " ";
+                Snackbar.make(view1, "Invalid password", Snackbar.LENGTH_SHORT).show();
+            }else if (isBalanceGood && isPasswordGood) {
+                String addBalanceRequest = "addBalance " + CurrentUser.getInstance().getUsername() + " " + currentPassword + " " + currentValue + " ";
                 Handler handler = new Handler();
-
-                new LogInThread(loginRequest, view, handler, () -> {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                }).start();
+                new AddBalanceThread(addBalanceRequest, view, handler).start();
             }
         });
-
-       binding.forgotPasswordText.setOnClickListener(view1 -> {
-           if(isUsernameGood == false){
-               Snackbar.make(view1, "Username incorrect", Snackbar.LENGTH_SHORT).show();
-           }else if (isUsernameGood ){
-               String forgotPassRequest = "forgotPass " + currentUsername + " ";
-               Handler handler = new Handler();
-
-               new ForgotPassThread(forgotPassRequest, view, handler);
-           }
-       });
     }
 }

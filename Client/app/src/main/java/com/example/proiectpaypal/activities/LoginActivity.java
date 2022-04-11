@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.example.proiectpaypal.R;
 import com.example.proiectpaypal.randomthings.ViewPagerFragmentAdapter2;
@@ -17,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
 
-    private String[] titles = new String[] {"Home", "Add balance", "Transfer"};
+    private String[] titles = new String[] {"Home", "Add balance", "Transfer", "Change info", "Info"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_login);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        getSupportActionBar().hide();
 
         viewPager2 = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabLayout);
